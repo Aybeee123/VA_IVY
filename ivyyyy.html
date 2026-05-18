@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivy Kate Patalay - General Virtual Assistant</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Typed.js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --primary-black: #1a1a1a;
+            --secondary-black: #2d2d2d;
+            --lilac: #c8a2c8;
+            --lilac-light: #e0c3e0;
+            --white: #ffffff;
+            --text-light: #b0b0b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .section { padding: 80px 0; scroll-margin-top: 80px; }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--lilac);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Section reveal (beautiful transition) */
+        .reveal-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* gradient sweep overlay */
+        .reveal-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(200,162,200,0) 0%, rgba(200,162,200,0.25) 50%, rgba(200,162,200,0) 100%);
+            transform: translateX(-120%);
+            opacity: 0;
+            transition: transform 600ms ease-in-out, opacity 300ms ease-in-out;
+            pointer-events: none;
+        }
+
+        .reveal-section.revealed::before {
+            transform: translateX(120%);
+            opacity: 1;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 700ms ease, transform 700ms ease;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skills small boxes (match VA_IVY.html look) */
+        .skills-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+        .skill-box i {
+            transition: transform 0.3s ease, filter 0.3s ease;
+            will-change: transform;
+        }
+        .skill-box:hover {
+            transform: translateY(-10px);
+        }
+        .skill-box:hover i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+
+
+        /* --- NAVBAR --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: padding 0.3s;
+        }
+        nav.scrolled { padding: 0.5rem 5%; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--lilac); }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--lilac); }
+
+        .hamburger { display: none; cursor: pointer; font-size: 1.5rem; color: var(--lilac); }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-light); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .typed-text { color: var(--lilac); font-weight: 600; }
+
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background: var(--lilac); color: var(--primary-black); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(200,162,200,0.4); }
+        .btn-secondary { background: transparent; border: 2px solid var(--lilac); color: var(--white); }
+        .btn-secondary:hover { background: var(--lilac); color: var(--primary-black); }
+
+        /* --- ABOUT --- */
+        .about-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .about-img { width: 300px; height: 300px; border-radius: 50%; object-fit: cover; border: 5px solid var(--lilac); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .about-text h3 { font-size: 1.8rem; color: var(--lilac); margin-bottom: 1rem; }
+        .about-text p { color: var(--text-light); margin-bottom: 1rem; }
+
+        /* --- WHY ME --- */
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+.benefit-card {
+            padding: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            transition: transform 350ms ease, box-shadow 350ms ease, background 350ms ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+        .benefit-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(200,162,200,0.14);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.35);
+        }
+        .benefit-card i { font-size: 2.5rem; color: var(--lilac); margin-bottom: 1rem; }
+
+        /* --- SERVICES --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+.service-card {
+            padding: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            transition: transform 350ms ease, box-shadow 350ms ease, background 350ms ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+        .service-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(200,162,200,0.14);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.35);
+        }
+        .service-card i { font-size: 3rem; background: linear-gradient(45deg, var(--lilac), var(--white)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+        /* --- PROCESS --- */
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
+.process-step {
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--lilac);
+            transition: transform 350ms ease, box-shadow 350ms ease, background 350ms ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+        .process-step:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(200,162,200,0.10);
+            box-shadow: 0 18px 45px rgba(0,0,0,0.30);
+        }
+        .step-num { background: var(--lilac); color: var(--primary-black); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 1rem; }
+
+        /* --- SKILLS (match VA_IVY.html) --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-item {
+            text-align: center;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .skill-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .skill-item:hover .skill-logo {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 30px rgba(200, 162, 200, 0.4);
+            border-color: var(--lilac);
+        }
+
+        /* --- SAMPLE WORK --- */
+.sample-work-card {
+            background: rgba(200,162,200,0.10);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 350ms ease, box-shadow 350ms ease, background 350ms ease;
+        }
+        .sample-work-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(200,162,200,0.16);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.35);
+        }
+        .sample-img { width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin-top: 1.5rem; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* --- DOWNLOAD --- */
+        .download-section { background: linear-gradient(135deg, #2d2d2d, #1a1a1a); border: 1px solid var(--lilac); padding: 4rem 2rem; border-radius: 20px; text-align: center; }
+        .ebook-icon { font-size: 5rem; color: var(--lilac); margin-bottom: 1.5rem; }
+
+        /* --- CONTACT --- */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+.contact-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            transition: transform 350ms ease, box-shadow 350ms ease, background 350ms ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+.contact-card:hover {
+            background: rgba(200,162,200,0.22);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 18px 45px rgba(0,0,0,0.30);
+        }
+        .contact-icon { width: 50px; height: 50px; background: var(--lilac); color: var(--primary-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+        /* --- FOOTER --- */
+        footer { text-align: center; padding: 2rem; background: #111; margin-top: 4rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .socials a { margin: 0 10px; color: var(--text-light); transition: 0.3s; }
+        .socials a:hover { color: var(--lilac); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 70%; height: 100vh; background: #1a1a1a; flex-direction: column; justify-content: center; align-items: center; transition: 0.4s; box-shadow: -5px 0 15px rgba(0,0,0,0.5); }
+            .nav-links.active { right: 0; }
+            .about-container { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+            .about-img { width: 250px; height: 250px; }
+            .hero h1 { font-size: 2.2rem; }
+        }
+
+        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--lilac); z-index: 1001; width: 0%; transition: width 0.1s; }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">VA Ivy Kate</div>
+        <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#why-me">Why Me</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="fade-in-up">
+            <h1>Hello, I am <span class="typed-text" id="typed"></span></h1>
+            <p class="hero-subtitle">Reliable General Virtual Assistant helping businesses streamline operations. I bring tech skills + administrative excellence to your team.</p>
+            <div class="cta-buttons">
+                <a href="#services" class="btn btn-primary"><i class="fas fa-rocket"></i> View Services</a>
+                <a href="https://calendly.com/ivykatepatalay/30min" target="_blank" class="btn btn-secondary"><i class="fas fa-calendar-check"></i> Book a Call</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-container glass">
+
+                <div>
+                    <img src="ivy.png" alt="Ivy Kate" class="about-img">
+                </div>
+                <div class="about-text">
+                    <h3>Hi, I'm Ivy Kate Patalay</h3>
+                    <p>I am a detail-oriented and versatile Virtual Assistant dedicated to streamlining business operations and helping clients reclaim their time.</p>
+                    <p>With a background in Information Technology and digital design, I efficiently handle everything from day-to-day administrative tasks to creating clean, professional visuals.</p>
+                    <p>My goal is simple: make your life easier through reliable systems and exceptional support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Me -->
+    <section id="why-me" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">Why Work With Me?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card glass">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Tech-Savvy</h3>
+                    <p style="color: var(--text-light);">Background in IT means I troubleshoot basic issues and adapt to new software quickly.</p>
+                </div>
+                <div class="benefit-card glass">
+                    <i class="fas fa-clock"></i>
+                    <h3>Time Efficient</h3>
+                    <p style="color: var(--text-light);">I value time. I deliver tasks ahead of deadlines without compromising quality.</p>
+                </div>
+                <div class="benefit-card glass">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>100% Accuracy</h3>
+                    <p style="color: var(--text-light);">Meticulous attention to detail ensures error-free work every time.</p>
+                </div>
+                <div class="benefit-card glass">
+                    <i class="fas fa-comments"></i>
+                    <h3>Clear Communication</h3>
+                    <p style="color: var(--text-light);">Proactive updates and professionalclient interaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">Core Services</h2>
+            <div class="services-grid">
+                <div class="service-card glass">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Email & Calendar Management</h3>
+                    <p style="color: var(--text-light);">Professional email handling, scheduling, and calendar organization.</p>
+                </div>
+                <div class="service-card glass">
+                    <i class="fas fa-database"></i>
+                    <h3>Data Entry & Management</h3>
+                    <p style="color: var(--text-light);">Accurate data entry, spreadsheet management, and CRM updates.</p>
+                </div>
+                <div class="service-card glass">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Document Organization</h3>
+                    <p style="color: var(--text-light);">Streamlined file management and efficient record-keeping systems.</p>
+                </div>
+                <div class="service-card glass">
+                    <i class="fas fa-headset"></i>
+                    <h3>Customer Communication</h3>
+                    <p style="color: var(--text-light);">Professional client communication via email, phone, and chat.</p>
+                </div>
+                <div class="service-card glass">
+                    <i class="fas fa-code"></i>
+                    <h3>Website Content Updates</h3>
+                    <p style="color: var(--text-light);">Basic HTML/CSS editing, content updates, and website maintenance.</p>
+                </div>
+                <div class="service-card glass">
+                    <i class="fas fa-tools"></i>
+                    <h3>Technical Support</h3>
+                    <p style="color: var(--text-light);">Remote office support, basic IT assistance, and troubleshooting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">My Working Process</h2>
+            <div class="process-grid">
+                <div class="process-step glass">
+                    <div class="step-num">1</div>
+                    <h3>Discovery</h3>
+                    <p style="color: var(--text-light);">We discuss your pain points, tools, and workflow preferences.</p>
+                </div>
+                <div class="process-step glass">
+                    <div class="step-num">2</div>
+                    <h3>Setup</h3>
+                    <p style="color: var(--text-light);">I access your tools and create Standard Operating Procedures (SOPs).</p>
+                </div>
+                <div class="process-step glass">
+                    <div class="step-num">3</div>
+                    <h3>Execution</h3>
+                    <p style="color: var(--text-light);">I start handling tasks with consistent updates and high accuracy.</p>
+                </div>
+                <div class="process-step glass">
+                    <div class="step-num">4</div>
+                    <h3>Review</h3>
+                    <p style="color: var(--text-light);">Weekly check-ins to ensure KPIs are met and processes are optimized.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Tools Section -->
+    <section id="skills" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">Skills & Tools</h2>
+
+            <div class="skills-grid">
+                <!-- Microsoft Office -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftoffice.svg" alt="Microsoft Office" class="skill-logo">
+                    <p>MS Office</p>
+                </div>
+
+                <!-- Google Workspace -->
+                <div class="skill-item">
+                    <img src="2991147.png" alt="Google Workspace" class="skill-logo">
+                    <p>Google Workspace</p>
+                </div>
+
+                <!-- Trello -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/trello.svg" alt="Trello" class="skill-logo">
+                    <p>Trello</p>
+                </div>
+
+                <!-- Asana -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/asana.svg" alt="Asana" class="skill-logo">
+                    <p>Asana</p>
+                </div>
+
+                <!-- Slack -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg" alt="Slack" class="skill-logo">
+                    <p>Slack</p>
+                </div>
+
+                <!-- Zoom -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/zoom.svg" alt="Zoom" class="skill-logo">
+                    <p>Zoom</p>
+                </div>
+
+                <!-- HTML -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/html5.svg" alt="HTML" class="skill-logo">
+                    <p>HTML</p>
+                </div>
+
+                <!-- CSS -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/css3.svg" alt="CSS" class="skill-logo">
+                    <p>CSS</p>
+                </div>
+
+                <!-- JavaScript -->
+                <div class="skill-item">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/javascript.svg" alt="JavaScript" class="skill-logo">
+                    <p>JavaScript</p>
+                </div>
+
+                <!-- Data Management (Database icon) -->
+                <div class="skill-item">
+                    <img src="data-management.png" alt="Data Management" class="skill-logo">
+                    <p>Data Management</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Sample Work Section -->
+    <section id="sample-work" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">Sample Work</h2>
+            <div class="sample-work-card glass">
+                <h3 style="margin-bottom: 1rem;">Virtual Assistant Services Overview</h3>
+                <p style="color: var(--text-light);">A comprehensive view of services offered including calendar management, data entry, and customer support.</p>
+                <img src="samplework.png" alt="Sample Work" class="sample-img" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="section reveal-section">
+        <div class="container">
+            <div class="download-section glass">
+                <i class="fas fa-file-pdf ebook-icon"></i>
+                <h2 style="margin-bottom: 1rem;">Want to Scale Your Business?</h2>
+                <p style="max-width: 600px; margin: 0 auto 2rem; color: var(--text-light);">
+                    Download my free <strong>"Ultimate VA Checklist"</strong>. Learn how to delegate effectively and reclaim 10+ hours a week.
+                </p>
+                <a href="./Ultimate_VA_Checklist.pdf" class="btn btn-primary" style="text-decoration:none;"><i class="fas fa-download"></i> Download Free PDF</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section reveal-section">
+        <div class="container">
+            <h2 class="section-title">Let's Work Together</h2>
+            <div class="contact-grid">
+                <div class="contact-card glass">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <h4>Email</h4>
+                        <a href="mailto:ivykatepatalay@gmail.com" style="color: var(--lilac);">ivykatepatalay@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-card glass">
+                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <h4>Phone</h4>
+                        <a href="tel:+639660835559" style="color: var(--lilac);">0966-083-5559</a>
+                    </div>
+                </div>
+                <div class="contact-card glass">
+                    <div class="contact-icon"><i class="fab fa-linkedin-in"></i></div>
+                    <div>
+                        <h4>LinkedIn</h4>
+                        <a href="https://www.linkedin.com/in/ivy-kate-tabaniag-patalay-6b6174403/" target="_blank" rel="noopener noreferrer" style="color: var(--lilac);">Ivy Kate Patalay</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calendly Inline Widget -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://calendly.com/ivykatepatalay/30min" target="_blank" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">
+                    <i class="fas fa-calendar-check"></i> Book a Free Consultation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="socials">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="mailto:ivykatepatalay@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p>&copy; 2026 Ivy Kate Patalay. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Typed.js Animation
+        new Typed('#typed', {
+            strings: ['Ivy Kate Patalay', 'Your Virtual Assistant', 'Admin Expert', 'Tech Support'],
+            typeSpeed: 80,
+            backSpeed: 50,
+            backDelay: 1500,
+            loop: true
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+            
+            // Progress Bar
+            const progress = document.getElementById('progressBar');
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const width = (scrollTop / docHeight) * 100;
+            progress.style.width = width + '%';
+        });
+
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Fade In Animation + Section sweep transition
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe both text blocks and whole sections
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal-section').forEach(el => observer.observe(el));
+
+    </script>
+</body>
+</html>
